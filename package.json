@@ -61,8 +61,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn prettier-format && yarn lint",
-      "commit-msg": "npx --no -- commitlint --edit \"\""
+      "pre-commit": "yarn prettier-format && yarn lint"
     }
   }
 }
