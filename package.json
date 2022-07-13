@@ -19,6 +19,8 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/config": "^0.0.41",
@@ -59,7 +61,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn prettier-format && yarn lint"
+      "pre-commit": "yarn prettier-format && yarn lint",
+      "commit-msg": "npx --no -- commitlint --edit \"\\${1}"
     }
   }
 }
