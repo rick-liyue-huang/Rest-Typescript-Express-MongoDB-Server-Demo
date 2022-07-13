@@ -124,3 +124,13 @@ note in .husky/pre-commit
 
 yarn lint-staged
 ```
+
+add code on package.json
+```
+"husky": {
+    "hooks": {
+      "pre-commit": "yarn prettier-format && yarn lint"
+    }
+  }
+```
+
