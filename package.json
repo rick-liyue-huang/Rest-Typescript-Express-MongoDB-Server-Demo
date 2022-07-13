@@ -62,7 +62,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "yarn prettier-format && yarn lint",
-      "commit-msg": "npx --no -- commitlint --edit \"\\${1}"
+      "commit-msg": "npx --no -- commitlint --edit \"\""
     }
   }
 }
