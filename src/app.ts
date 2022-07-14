@@ -15,6 +15,8 @@ const app = express();
 // const PORT = process.env.PORT || 1336;
 const PORT = config.get<number>('port');
 
+app.use(express.json());
+
 app.listen(PORT, async () => {
   logger.info(`this express server is running on port of ${PORT}`);
   await connectDB();

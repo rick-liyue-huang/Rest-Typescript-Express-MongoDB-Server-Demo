@@ -10,8 +10,7 @@ import dayjs from 'dayjs';
  */
 const logger = pino(
   {
-    timestamp: () => `,"time": ${dayjs().format()}`,
-    level: 'info'
+    timestamp: () => `,"time": ${dayjs().format()}`
   },
   stream
 );
