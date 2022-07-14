@@ -1,5 +1,6 @@
 import { DocumentDefinition } from 'mongoose';
 import { IUserType, UserModel } from '../models/user.model';
+import { omit } from 'lodash';
 
 /**
  * @define connect with mongoDB and create the user by 'UserModel.create' method
@@ -13,8 +14,35 @@ export const createUserService = async (
 ) => {
   try {
     // create the user in mongodb and return to controller
-    return await UserModel.create(input);
+    const user = await UserModel.create(input);
+    return omit(user.toJSON(), 'password');
   } catch (err: any) {
     throw new Error(err);
   }
+};
+
+/**
+ * @description if not found email or password no match, it will return false, otherwise it will return the email only
+ * @param email
+ * @param password
+ */
+export const validatePassword = async ({
+  email,
+  password
+}: {
+  email: string;
+  password: string;
+}) => {
+  const user = await UserModel.findOne({ email: email });
+  if (!user) {
+    return false;
+  }
+  // UserModel = mongoose.model<IUserType>('User', UserSchema);
+  const isValid = await user.comparePassword(password);
+
+  if (!isValid) {
+    return false;
+  }
+
+  return omit(user.toJSON(), 'password');
 };
