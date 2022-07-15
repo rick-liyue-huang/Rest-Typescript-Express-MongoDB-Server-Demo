@@ -3,6 +3,7 @@ import { log } from 'console-log-colors';
 import dayjs from 'dayjs';
 import { createUserService } from '../services/user.service';
 import { CreateUserInput, createUserSchema } from '../schemas/user.schema';
+import { omit } from 'lodash';
 
 /**
  * @define create the 'create user controller'
@@ -15,7 +16,8 @@ export const createUserController = async (
 ) => {
   try {
     const user = await createUserService(req.body);
-    return res.send(user);
+    // do not show the password field
+    return res.send(omit(user.toJSON(), 'password'));
   } catch (err: any) {
     log.bgRedBright(`${err}`);
     return res.status(409).send({ err });

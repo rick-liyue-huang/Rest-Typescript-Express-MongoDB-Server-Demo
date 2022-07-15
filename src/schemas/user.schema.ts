@@ -6,19 +6,19 @@ import { object, string, TypeOf } from 'zod';
 export const createUserSchema = object({
   body: object({
     name: string({
-      required_error: 'Name is required'
+      required_error: 'Register name is required'
     }),
     password: string({
-      required_error: 'Password is required'
+      required_error: 'Register password is required'
     }).min(6, 'need at least 6 characters'),
     passwordConfirmation: string({
-      required_error: 'password not matched'
+      required_error: 'Register password not matched'
     }),
     email: string({
-      required_error: 'email is required'
+      required_error: 'Register email is required'
     }).email('Not a valid email')
   }).refine((data) => data.password === data.passwordConfirmation, {
-    message: 'Password not match each other',
+    message: 'Register password not match each other',
     path: ['passwordConfirmation']
   })
 });

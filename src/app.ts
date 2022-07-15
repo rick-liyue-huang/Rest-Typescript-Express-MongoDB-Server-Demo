@@ -1,7 +1,7 @@
 import { log } from 'console-log-colors';
 import express from 'express';
 import config from 'config';
-import { connectDB } from './utils/connectDB';
+import { connectDB } from './utils/connectDB.utils';
 import dayjs from 'dayjs';
 import { routes } from './routes';
 
