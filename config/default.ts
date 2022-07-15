@@ -1,6 +1,9 @@
+/**
+ * @define 'config' lib configuration file
+ */
 export default {
   port: 1336,
-  mongoDBUri: `mongodb+srv://rickliyuehuang:passwordpassword@cluster0.n3v04.mongodb.net/?retryWrites=true&w=majority`,
+  mongoDBUri: `mongodb+srv://rickliyuehuang:passwordpassword@cluster0.q0mdq.mongodb.net/?retryWrites=true&w=majority`,
   passwordSaltFactor: 10,
   publicKey: `-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCPHIBSd3bucWjy9b1Uh8eYLk3n
@@ -23,6 +26,6 @@ FQwkssGY36iimZU/aBDwhBNqVYCxRb5Xw/me9qRE5Tjlf5q15YK97xQ+pQUx+VS2
 tpxRUzX+pNi09MhVBckCQBXE+obws7GPK/QmDe/ncVAPFiV4+fwikcdhNfuBk7nJ
 yKKKTz7PX3dXKJ6PH/A1mpDAzmoXeg/PPTCSxOzbsQ0=
 -----END RSA PRIVATE KEY-----`,
-  accessTokenTimeDuration: '10m',
+  accessTokenTimeDuration: '15m',
   refreshTokenTimeDuration: '1y'
 };

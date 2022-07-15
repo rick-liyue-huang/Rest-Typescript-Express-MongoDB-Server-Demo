@@ -1,30 +1,29 @@
+import { log } from 'console-log-colors';
 import mongoose from 'mongoose';
 import config from 'config';
-import logger from '../utils/logger';
+import dayjs from 'dayjs';
 
-/**
- * @define using mongoose to connect with MongoDB
- */
-async function connectDB() {
-  const mongoDBURI = config.get<string>('mongoDBUri');
-  logger.info('MongoDB is connected');
+export const connectDB = async () => {
+  const dbURI = config.get<string>('mongoDBUri');
   try {
-    await mongoose.connect(mongoDBURI);
+    await mongoose.connect(dbURI);
+    log.bgYellowBright(
+      `This server connected with MongoDB already, time: ${dayjs().format()}`
+    );
   } catch (err) {
-    logger.error('Not yet connect with DB');
+    log.bgRedBright(`Not yet connect with MongoDB, time: ${dayjs().format()}`);
     process.exit(1);
   }
 
-  /* second method
-    return mongoose.connect(mongoDBURI)
-      .then(() => {
-        console.log('Connected to DB');
-      })
-      .catch(err => {
-        console.error('Not yet connect with DB');
-        process.exit(1)
-      })
-  */
-}
-
-export default connectDB;
+  /*
+  return mongoose
+    .connect(dbURI)
+    .then(() => {
+      log.bgYellowBright('This server connected with MongoDB already');
+    })
+    .catch((err) => {
+      log.redBright('Not yet connect with MongoDB');
+      process.exit(1); // means error
+    });
+    */
+};

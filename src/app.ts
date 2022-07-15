@@ -1,26 +1,17 @@
-/**
- *@description create the express server, and use the config/default variables,
- * because this project import config dependency
- */
+import { log } from 'console-log-colors';
 import express from 'express';
 import config from 'config';
-import connectDB from './utils/connectDB';
-import logger from './utils/logger';
-import routes from './routes';
-
-// import dotenv from 'dotenv';
-// dotenv.config();
+import { connectDB } from './utils/connectDB';
+import dayjs from 'dayjs';
 
 const app = express();
-// const PORT = process.env.PORT || 1336;
-const PORT = config.get<number>('port');
-
-app.use(express.json());
+// using the port from config
+const PORT = config.get<number>('port') || 1336;
 
 app.listen(PORT, async () => {
-  logger.info(`this express server is running on port of ${PORT}`);
-  await connectDB();
+  log.bgCyanBright(
+    `This express server is running on port of ${PORT}, time: ${dayjs().format()}`
+  );
 
-  // wrap the app.use in routes file
-  routes(app);
+  await connectDB();
 });
