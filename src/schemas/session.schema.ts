@@ -1,5 +1,4 @@
 import { object, string, TypeOf } from 'zod';
-import { createUserSchema } from './user.schema';
 
 /**
  * @define confirm the input while get the session after login in zod type
@@ -15,4 +14,4 @@ export const createSessionSchema = object({
   })
 });
 
-export type CreateSessionType = TypeOf<typeof createUserSchema>;
+export type CreateSessionType = TypeOf<typeof createSessionSchema>;

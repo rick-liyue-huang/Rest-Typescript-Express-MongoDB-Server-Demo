@@ -4,7 +4,12 @@ import config from 'config';
 const publicJWTKey = config.get<string>('publicKey');
 const privateJWTKey = config.get<string>('privateKey');
 
-export const signJWT = async (
+/**
+ * @define create custom method for create token
+ * @param payload
+ * @param options
+ */
+export const signJWT = (
   payload: Object,
   options?: jwt.SignOptions | undefined
 ) => {
@@ -15,19 +20,23 @@ export const signJWT = async (
   });
 };
 
-export const verifyJWT = async (token: string) => {
+/**
+ * @define get user info from valid token
+ * @param token
+ */
+export const verifyJWT = (token: string) => {
   try {
     // match with the privateJWTKey
     const decoded = jwt.verify(token, publicJWTKey);
     return {
       valid: true,
       expired: false,
-      decoded: decoded
+      decoded
     };
   } catch (err: any) {
     return {
       valid: false,
-      expired: err.message === 'jwt expired already',
+      expired: err.message === 'jwt expired',
       decoded: null
     };
   }

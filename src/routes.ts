@@ -2,8 +2,13 @@ import { Express, Request, Response } from 'express';
 import { createUserController } from './controllers/user.controller';
 import { validateResources } from './middlewares/validateResources';
 import { createUserSchema } from './schemas/user.schema';
-import { createSessionController } from './controllers/session.controller';
+import {
+  createSessionController,
+  deleteSessionController,
+  getUserSessionController
+} from './controllers/session.controller';
 import { createSessionSchema } from './schemas/session.schema';
+import { requireUser } from './middlewares/requireUser';
 
 export const routes = (app: Express) => {
   app.get('/testroute', (req: Request, res: Response) => {
@@ -22,4 +27,8 @@ export const routes = (app: Express) => {
     validateResources(createSessionSchema),
     createSessionController
   );
+
+  app.get('/api/sessions', requireUser, getUserSessionController);
+
+  app.delete('/api/sessions', requireUser, deleteSessionController);
 };
