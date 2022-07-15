@@ -9,6 +9,18 @@ import {
 } from './controllers/session.controller';
 import { createSessionSchema } from './schemas/session.schema';
 import { requireUser } from './middlewares/requireUser';
+import {
+  createProductSchema,
+  deleteProductSchema,
+  getProductSchema,
+  updateProductSchema
+} from './schemas/product.schema';
+import {
+  createProductController,
+  deleteProductController,
+  getProductController,
+  updateProductController
+} from './controllers/product.controller';
 
 export const routes = (app: Express) => {
   app.get('/testroute', (req: Request, res: Response) => {
@@ -31,4 +43,28 @@ export const routes = (app: Express) => {
   app.get('/api/sessions', requireUser, getUserSessionController);
 
   app.delete('/api/sessions', requireUser, deleteSessionController);
+
+  app.get(
+    '/api/products/:productId',
+    validateResources(getProductSchema),
+    getProductController
+  );
+
+  app.post(
+    '/api/products',
+    [requireUser, validateResources(createProductSchema)],
+    createProductController
+  );
+
+  app.put(
+    '/api/products/:productId',
+    [requireUser, validateResources(updateProductSchema)],
+    updateProductController
+  );
+
+  app.delete(
+    '/api/products/:productId',
+    [requireUser, validateResources(deleteProductSchema)],
+    deleteProductController
+  );
 };

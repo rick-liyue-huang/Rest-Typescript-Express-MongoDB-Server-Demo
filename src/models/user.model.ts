@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import config from 'config';
-import { string } from 'zod';
 
 /**
  * @define User type in mongoDB
