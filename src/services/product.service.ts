@@ -7,7 +7,9 @@ import {
 } from 'mongoose';
 
 export const createProductService = async (
-  input: DocumentDefinition<Omit<IProductType, 'createdAt' | 'updatedAt'>>
+  input: DocumentDefinition<
+    Omit<IProductType, 'createdAt' | 'updatedAt' | 'productId'>
+  >
 ) => {
   const result = await ProductModel.create(input);
   return result;

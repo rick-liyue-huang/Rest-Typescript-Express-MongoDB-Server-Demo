@@ -134,3 +134,8 @@ add code on package.json
   }
 ```
 
+separate the app from app.ts to get the standalone app for testing
+`yarn add supertest jest ts-jest @types/jest @types/supertest -D`
+`yarn ts-jest config:init`
+`yarn test --detectOpenHandles` to get the test results detail
+`yarn test --watchAll` get the test result live
