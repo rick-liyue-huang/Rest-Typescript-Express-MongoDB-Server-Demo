@@ -27,5 +27,6 @@ tpxRUzX+pNi09MhVBckCQBXE+obws7GPK/QmDe/ncVAPFiV4+fwikcdhNfuBk7nJ
 yKKKTz7PX3dXKJ6PH/A1mpDAzmoXeg/PPTCSxOzbsQ0=
 -----END RSA PRIVATE KEY-----`,
   accessTokenTimeDuration: '15m',
-  refreshTokenTimeDuration: '1y'
+  refreshTokenTimeDuration: '1y',
+  origin: 'http://localhost:3000'
 };

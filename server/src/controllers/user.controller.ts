@@ -16,8 +16,9 @@ export const createUserController = async (
 ) => {
   try {
     const user = await createUserService(req.body);
+    console.log('user: -----', user);
     // do not show the password field
-    return res.send(omit(user.toJSON(), 'password'));
+    return res.send(user);
   } catch (err: any) {
     log.bgRedBright(`${err}`);
     return res.status(409).send({ err });

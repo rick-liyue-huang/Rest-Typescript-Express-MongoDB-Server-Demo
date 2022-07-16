@@ -1,6 +1,7 @@
 import { log } from 'console-log-colors';
 import express from 'express';
 import config from 'config';
+import cors from 'cors';
 import { connectDB } from './utils/connectDB.util';
 import dayjs from 'dayjs';
 import { routes } from './routes';
@@ -11,6 +12,13 @@ const PORT = config.get<number>('port') || 1336;
 
 // export the app for supertest lib in __tests__ directory
 export const app = express(); // for test
+
+app.use(
+  cors({
+    origin: config.get<string>('origin'),
+    credentials: true
+  })
+);
 
 app.use(express.json()); // for test
 // let all the routes can get the user info after login
