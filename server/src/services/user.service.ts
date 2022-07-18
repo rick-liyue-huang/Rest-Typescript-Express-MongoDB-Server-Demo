@@ -1,56 +1,18 @@
-import { DocumentDefinition, FilterQuery } from 'mongoose';
+import mongoose, { DocumentDefinition } from 'mongoose';
 import { IUserType, UserModel } from '../models/user.model';
-import { omit } from 'lodash';
 
 /**
- * @define create the user document in mongoDB when register
- * @param input: need to omit the three fields to match with zod input type
+ * @define service used to connect with mongoDB through UserModel
+ * @param input
  */
 export const createUserService = async (
   input: DocumentDefinition<
-    Omit<IUserType, 'createdAt' | 'updatedAt' | 'comparePassword'>
+    Omit<IUserType, 'comparePassword' | 'createdAt' | 'updatedAt'>
   >
 ) => {
   try {
-    const user = await UserModel.create(input);
-    return omit(user.toJSON(), 'password');
+    return await UserModel.create(input);
   } catch (err: any) {
     throw new Error(err);
   }
-};
-
-/**
- * @define to get the user from mongoDB when login
- * @param email
- * @param password
- */
-export const validatePassword = async ({
-  email,
-  password
-}: {
-  email: string;
-  password: string;
-}) => {
-  // get existing user through email
-  const user = await UserModel.findOne({ email: email });
-
-  if (!user) {
-    return false;
-  }
-  // confirm the password is correct. NOW the user look like 'const user: IUserType & {_id: Types.ObjectId}'
-  const isValid = await user.comparePassword(password);
-
-  if (!isValid) {
-    return false;
-  }
-
-  return omit(user.toJSON(), 'password');
-};
-
-/**
- * @define get the single user from query user _id
- * @param query
- */
-export const findUserService = async (query: FilterQuery<IUserType>) => {
-  return UserModel.findOne(query).lean();
 };

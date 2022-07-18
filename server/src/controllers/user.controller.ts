@@ -1,26 +1,19 @@
 import { Request, Response } from 'express';
-import { log } from 'console-log-colors';
-import dayjs from 'dayjs';
+import chalk from 'chalk';
 import { createUserService } from '../services/user.service';
-import { CreateUserInput, createUserSchema } from '../schemas/user.schema';
-import { omit } from 'lodash';
+import { CreateUserInput } from '../zod-schemas/user.schema';
 
-/**
- * @define create the 'create user controller'
- * @param req: req.body is matched with the zod type
- * @param res
- */
 export const createUserController = async (
   req: Request<{}, {}, CreateUserInput['body']>,
   res: Response
 ) => {
   try {
+    // here use req.body after the validateResources middleware, so let the req.body match with zod type
+    // in order to match the zod input type with mongoDB user type, need to omit some properties!!!
     const user = await createUserService(req.body);
-    console.log('user: -----', user);
-    // do not show the password field
     return res.send(user);
   } catch (err: any) {
-    log.bgRedBright(`${err}`);
-    return res.status(409).send({ err });
+    console.log(chalk.bgRedBright(err));
+    return res.status(409).send(err.message); // conflict
   }
 };

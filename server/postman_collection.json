@@ -471,15 +471,15 @@
   "variable": [
     {
       "key": "email",
-      "value": "test@example.com"
+      "value": "rick@example.com"
     },
     {
       "key": "password",
-      "value": "Password456!"
+      "value": "123123"
     },
     {
       "key": "name",
-      "value": "Jane Doe"
+      "value": "rick"
     },
     {
       "key": "accessToken",

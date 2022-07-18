@@ -1,29 +1,27 @@
-import { log } from 'console-log-colors';
 import mongoose from 'mongoose';
+import chalk from 'chalk';
 import config from 'config';
-import dayjs from 'dayjs';
 
-export const connectDB = async () => {
-  const dbURI = config.get<string>('mongoDBUri');
+export const connectDBUtil = async () => {
+  const mongoDBUri = config.get<string>('mongoDBUri');
+
   try {
-    await mongoose.connect(dbURI);
-    log.bgYellowBright(
-      `This server connected with MongoDB already, time: ${dayjs().format()}`
-    );
+    await mongoose.connect(mongoDBUri);
+    console.log(chalk.bgBlueBright.bold('connected to mongoDB already'));
   } catch (err) {
-    log.bgRedBright(`Not yet connect with MongoDB, time: ${dayjs().format()}`);
+    console.error(chalk.bgRedBright('Not yet connect with mongoDB'));
     process.exit(1);
   }
 
   /*
   return mongoose
-    .connect(dbURI)
+    .connect(mongoDBUri)
     .then(() => {
-      log.bgYellowBright('This server connected with MongoDB already');
+      console.log('connected to mongoDB already');
     })
     .catch((err) => {
-      log.redBright('Not yet connect with MongoDB');
-      process.exit(1); // means error
+      console.error('Not yet connect with mongoDB');
+      process.exit(1);
     });
-    */
+  */
 };

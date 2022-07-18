@@ -4,6 +4,7 @@ import { NextPage } from 'next';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 /**
  * @define confirm with the zod type from server user.schema
@@ -36,6 +37,7 @@ type Input = TypeOf<typeof createUserSchema>;
  */
 const RegisterPage: NextPage = () => {
   const [registerError, setRegisterError] = useState(null);
+  const router = useRouter();
 
   const {
     register,
@@ -45,11 +47,12 @@ const RegisterPage: NextPage = () => {
     resolver: zodResolver(createUserSchema),
   });
 
-  const submitHandler = async (values: Input) => {
+  const submitHandler: SubmitHandler<Input> = async (values: Input) => {
     console.log({ values });
 
     try {
       await axios.post(`http://localhost:1336/api/users`, values);
+      router.push('/');
     } catch (err: any) {
       setRegisterError(err.message);
     }
