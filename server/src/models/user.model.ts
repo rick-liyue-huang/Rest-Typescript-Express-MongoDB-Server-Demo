@@ -77,7 +77,7 @@ UserSchema.methods.comparePassword = async function (
   inputPassword: string
 ): Promise<boolean> {
   const user = this as IUserType;
-  return bcrypt.compare(user.password, inputPassword).catch((err) => false);
+  return bcrypt.compare(inputPassword, user.password).catch((err) => false);
 };
 
 /**

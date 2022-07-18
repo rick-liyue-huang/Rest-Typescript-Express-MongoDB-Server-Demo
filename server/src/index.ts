@@ -5,12 +5,15 @@ import dayjs from 'dayjs';
 import { connectDBUtil } from './utils/connectDB.util';
 import { routes } from './routes';
 import cors from 'cors';
+import { deserializeUser } from './middlewares/deserializeUser';
 
 const app = express();
 const PORT = config.get<number>('port');
 
 app.use(cors());
 app.use(express.json());
+
+app.use(deserializeUser);
 
 app.listen(PORT, async () => {
   console.log(
