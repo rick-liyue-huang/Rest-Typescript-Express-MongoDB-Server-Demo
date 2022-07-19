@@ -56,7 +56,7 @@ export const getSessionController = async (req: Request, res: Response) => {
 
   const session = await getSessionService({ user: userId, valid: true });
 
-  console.log('session: in getSessionConroller: ', session);
+  console.log('session: in getSessionController: ', session);
   return res.send(session);
 };
 
