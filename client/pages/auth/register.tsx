@@ -1,114 +1,110 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
 import { NextPage } from 'next';
+import { useForm } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
-/**
- * @define confirm with the zod type from server user.schema
- */
-const createUserSchema = object({
+export const RegisterSchema = object({
+  email: string()
+    .nonempty({
+      message: 'register email is required',
+    })
+    .email('email is invalid'),
   name: string().nonempty({
-    message: 'Register name is required',
+    message: 'register name is required',
   }),
-  password: string().min(6, 'need at least 6 characters').nonempty({
-    message: 'Register password is required',
-  }),
+  password: string()
+    .nonempty({
+      message: 'register password is required',
+    })
+    .min(6, 'at least 6 characters'),
   passwordConfirmation: string().nonempty({
-    message: 'confirm password is required',
+    message: 'register confirm password is required',
   }),
-  email: string({
-    required_error: 'Register email is required',
-  }).email('Not a valid email'),
 }).refine((data) => data.password === data.passwordConfirmation, {
-  message: 'Register password not matched',
+  message: 'confirm password not match',
   path: ['passwordConfirmation'],
 });
 
-/**
- * @define confirm the Input Payload
- */
-type Input = TypeOf<typeof createUserSchema>;
+type RegisterSchemaType = TypeOf<typeof RegisterSchema>;
 
-/**
- * @define create the register page
- */
 const RegisterPage: NextPage = () => {
-  const [registerError, setRegisterError] = useState(null);
+  const [loginError, setLoginError] = useState(null);
   const router = useRouter();
-
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<Input>({
-    resolver: zodResolver(createUserSchema),
+  } = useForm<RegisterSchemaType>({
+    resolver: zodResolver(RegisterSchema),
   });
 
-  const submitHandler: SubmitHandler<Input> = async (values: Input) => {
+  const submitHandler = async (values: RegisterSchemaType) => {
     console.log({ values });
 
     try {
       await axios.post(`http://localhost:1336/api/users`, values);
       router.push('/');
     } catch (err: any) {
-      setRegisterError(err.message);
+      setLoginError(err.message);
     }
   };
 
-  // console.log({ errors });
+  console.log({ errors });
+
   return (
-    <div>
-      <p>{registerError}</p>
+    <>
+      <p>{loginError}</p>
       <form onSubmit={handleSubmit(submitHandler)}>
         <div className={'form-element'}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">Email: </label>
           <input
             id={'email'}
-            type="email"
-            placeholder={'jane.doe@example.com'}
+            type="text"
+            placeholder={'rick@example.com'}
             {...register('email')}
           />
           <p>{errors.email?.message}</p>
         </div>
 
         <div className={'form-element'}>
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Name: </label>
           <input
             id={'name'}
             type="text"
-            placeholder={'Jane Doe'}
+            placeholder={'rick'}
             {...register('name')}
           />
           <p>{errors.name?.message}</p>
         </div>
 
         <div className={'form-element'}>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Password: </label>
           <input
             id={'password'}
             type="password"
-            placeholder={'Password456!'}
+            placeholder={'123123'}
             {...register('password')}
           />
           <p>{errors.password?.message}</p>
         </div>
 
         <div className={'form-element'}>
-          <label htmlFor="passwordConfirmation">Confirm Password</label>
+          <label htmlFor="passwordConfirmation">Confirm Password: </label>
           <input
             id={'passwordConfirmation'}
             type="password"
-            placeholder={'Password456!'}
+            placeholder={'123123'}
             {...register('passwordConfirmation')}
           />
           <p>{errors.passwordConfirmation?.message}</p>
         </div>
-        <button type={'submit'}>Register</button>
+
+        <button type={'submit'}>Submit</button>
       </form>
-    </div>
+    </>
   );
 };
 

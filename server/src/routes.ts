@@ -1,5 +1,8 @@
 import { Express, Request, Response } from 'express';
-import { createUserController } from './controllers/user.controller';
+import {
+  createUserController,
+  getUserController
+} from './controllers/user.controller';
 import { validateResources } from './middlewares/validateResources';
 import { createUserService } from './services/user.service';
 import { createUserSchema } from './zod-schemas/user.schema';
@@ -35,6 +38,8 @@ export const routes = (app: Express) => {
     validateResources(createUserSchema),
     createUserController
   );
+
+  app.get('/api/me', requireUser, getUserController);
 
   app.post(
     '/api/sessions',

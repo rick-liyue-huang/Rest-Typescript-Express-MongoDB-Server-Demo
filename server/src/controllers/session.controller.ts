@@ -47,7 +47,27 @@ export const createSessionController = async (req: Request, res: Response) => {
       expiresIn: config.get<string>('refreshTokenTimeDuration')
     }
   );
-  //  5. return access and refresh token
+
+  // 5. save token in cookie for the /api/me
+  res.cookie('accessToken', accessToken, {
+    maxAge: 600000, // 10 mins
+    httpOnly: true, // js can not access it
+    domain: 'localhost', // for the development
+    path: '/',
+    sameSite: 'strict',
+    secure: false // true for https
+  });
+
+  res.cookie('refreshToken', refreshToken, {
+    maxAge: 3.154e10, // 1 year
+    httpOnly: true, // js can not access it
+    domain: 'localhost', // for the development
+    path: '/',
+    sameSite: 'strict',
+    secure: false // true for https
+  });
+
+  //  6. return access and refresh token
   return res.send({ accessToken, refreshToken });
 };
 
