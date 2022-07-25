@@ -26,7 +26,7 @@ FQwkssGY36iimZU/aBDwhBNqVYCxRb5Xw/me9qRE5Tjlf5q15YK97xQ+pQUx+VS2
 tpxRUzX+pNi09MhVBckCQBXE+obws7GPK/QmDe/ncVAPFiV4+fwikcdhNfuBk7nJ
 yKKKTz7PX3dXKJ6PH/A1mpDAzmoXeg/PPTCSxOzbsQ0=
 -----END RSA PRIVATE KEY-----`,
-  accessTokenTimeDuration: '3s',
+  accessTokenTimeDuration: '3000s',
   refreshTokenTimeDuration: '1y',
   origin: 'http://localhost:3000',
   googleClientId:

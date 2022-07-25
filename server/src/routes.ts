@@ -9,6 +9,18 @@ import {
   getSessionController
 } from './controllers/session.controller';
 import { requiredUser } from './middlewares/requiredUser';
+import {
+  createProductSchema,
+  deleteProductSchema,
+  getProductSchema,
+  updateProductSchema
+} from './schemas/product.schema';
+import {
+  createProductController,
+  deleteProductController,
+  getProductController,
+  updateProductController
+} from './controllers/product.controller';
 
 /**
  * @define create the routes for the whole project
@@ -34,4 +46,28 @@ export const routes = (app: Express) => {
   app.get('/api/sessions', requiredUser, getSessionController);
 
   app.delete('/api/sessions', requiredUser, deleteSessionController);
+
+  app.post(
+    '/api/products',
+    [requiredUser, validateResources(createProductSchema)],
+    createProductController
+  );
+
+  app.put(
+    '/api/products/:productId',
+    [requiredUser, validateResources(updateProductSchema)],
+    updateProductController
+  );
+
+  app.get(
+    '/api/products/:productId',
+    validateResources(getProductSchema),
+    getProductController
+  );
+
+  app.delete(
+    '/api/products/:productId',
+    [requiredUser, validateResources(deleteProductSchema)],
+    deleteProductController
+  );
 };
