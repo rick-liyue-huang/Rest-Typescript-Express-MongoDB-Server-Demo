@@ -1,33 +1,35 @@
 import { Request, Response } from 'express';
-import { validatePassword } from '../services/user.service';
+import { assignWith } from 'lodash';
 import {
   createSessionService,
   deleteSessionService,
   getSessionService
 } from '../services/session.service';
-import { signJWT } from '../utils/jwt.util';
 import config from 'config';
+import { validatePassword } from '../services/user.service';
+import { signJWT } from '../utils/jwt.util';
+import { CreateSessionInput } from '../schemas/session.schema';
 
 /**
- * @define
+ * @define create the controller for login in front end
  * @param req
  * @param res
  */
-export const createSessionController = async (req: Request, res: Response) => {
-  //  1. validate the user's password
-  console.log(req.body);
-  const { email, password } = req.body;
-  const user = await validatePassword({ email, password });
-
+export const createSessionController = async (
+  req: Request<{}, {}, CreateSessionInput['body']>,
+  res: Response
+) => {
+  // 1. validate the user's password
+  const user = await validatePassword(req.body);
   if (!user) {
-    return res.status(401).send('invalid email or password');
+    return res.sendStatus(401);
   }
-  //  2. crate a session
+  // 2. create session in mongodb used to store the user info
   const session = await createSessionService(
     user._id,
     req.get('user-agent') || ''
   );
-  //  3. create access token
+  // 3. create access token
   const accessToken = signJWT(
     {
       ...user,
@@ -37,62 +39,24 @@ export const createSessionController = async (req: Request, res: Response) => {
       expiresIn: config.get<string>('accessTokenTimeDuration')
     }
   );
-  //  4. create refresh token
-  const refreshToken = signJWT(
-    {
-      ...user,
-      session: session._id
-    },
-    {
-      expiresIn: config.get<string>('refreshTokenTimeDuration')
-    }
-  );
-
-  // 5. save token in cookie for the /api/me
-  res.cookie('accessToken', accessToken, {
-    maxAge: 600000, // 10 mins
-    httpOnly: true, // js can not access it
-    domain: 'localhost', // for the development
-    path: '/',
-    sameSite: 'strict',
-    secure: false // true for https
+  // 4. create refresh token
+  const refreshToken = signJWT({
+    ...user,
+    session: session._id
   });
-
-  res.cookie('refreshToken', refreshToken, {
-    maxAge: 3.154e10, // 1 year
-    httpOnly: true, // js can not access it
-    domain: 'localhost', // for the development
-    path: '/',
-    sameSite: 'strict',
-    secure: false // true for https
-  });
-
-  //  6. return access and refresh token
-  return res.send({ accessToken, refreshToken });
+  // 5. return tokens
+  return res.status(200).send({ accessToken, refreshToken });
 };
 
 export const getSessionController = async (req: Request, res: Response) => {
   const userId = res.locals.user._id;
-
-  const session = await getSessionService({ user: userId, valid: true });
-
-  console.log('session: in getSessionController: ', session);
-  return res.send(session);
+  console.log('userid:', userId);
+  const sessions = await getSessionService({ user: userId, valid: true });
+  return res.status(200).send(sessions);
 };
 
-/**
- * @define always remember that user.session = session._id, session.user = user._id
- * @param req
- * @param res
- */
 export const deleteSessionController = async (req: Request, res: Response) => {
   const sessionId = res.locals.user.session;
-
-  // actually it is update the valid to false, and let the session invalid
   await deleteSessionService({ _id: sessionId }, { valid: false });
-
-  return res.status(200).send({
-    accessToken: null,
-    refreshToken: null
-  });
+  return res.status(200).send({ accessToken: null, refreshToken: null });
 };

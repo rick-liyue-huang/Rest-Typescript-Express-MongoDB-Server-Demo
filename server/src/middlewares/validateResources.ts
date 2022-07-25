@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject } from 'zod';
+import { NextFunction, Request, Response } from 'express';
 
 /**
- * @define create the connection between the zod and mongoDB
- * @param schema: {body, query, params}
+ * @define connect zod type with mongoose user type
+ * @param schema.body === req.body
  */
 export const validateResources =
   (schema: AnyZodObject) =>
@@ -11,11 +11,11 @@ export const validateResources =
     try {
       schema.parse({
         body: req.body,
-        query: req.query,
-        params: req.params
+        params: req.params,
+        query: req.query
       });
       next();
     } catch (err: any) {
-      return res.status(400).send(err.errors);
+      return res.status(401).send(err.errors);
     }
   };

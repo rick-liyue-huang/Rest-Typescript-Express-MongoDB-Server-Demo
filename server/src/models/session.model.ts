@@ -2,7 +2,7 @@ import mongoose, { Document } from 'mongoose';
 import { IUserType } from './user.model';
 
 /**
- * @define create the session document type in mongodb
+ * @define create the session type
  */
 export interface ISessionType extends Document {
   user: IUserType['_id'];
@@ -12,9 +12,6 @@ export interface ISessionType extends Document {
   updatedAt: Date;
 }
 
-/**
- * @define the session schema match with session type in mongodb
- */
 export const SessionSchema = new mongoose.Schema(
   {
     user: {
@@ -35,7 +32,7 @@ export const SessionSchema = new mongoose.Schema(
 );
 
 /**
- * @define create the document
+ * @define create session document in mongoDB
  */
 export const SessionModel = mongoose.model<ISessionType>(
   'Session',

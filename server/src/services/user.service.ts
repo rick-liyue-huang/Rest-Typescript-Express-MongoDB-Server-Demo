@@ -1,10 +1,12 @@
-import mongoose, { DocumentDefinition, FilterQuery } from 'mongoose';
+import { DocumentDefinition, FilterQuery } from 'mongoose';
 import { IUserType, UserModel } from '../models/user.model';
 import { omit } from 'lodash';
+import exp from 'constants';
 
 /**
- * @define service used to connect with mongoDB through UserModel
+ * @define create the service to create the user document in mongodb
  * @param input
+ * @note must match the zod type with mongodb type with omit
  */
 export const createUserService = async (
   input: DocumentDefinition<
@@ -15,15 +17,10 @@ export const createUserService = async (
     const user = await UserModel.create(input);
     return omit(user.toJSON(), 'password');
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err); // be caught in controller
   }
 };
 
-/**
- * @define confirm the user is existing or not by email and password
- * @param email
- * @param password
- */
 export const validatePassword = async ({
   email,
   password
@@ -32,13 +29,11 @@ export const validatePassword = async ({
   password: string;
 }) => {
   const user = await UserModel.findOne({ email });
-
   if (!user) {
     return false;
   }
 
-  const isValid = await user.comparePassword(password);
-
+  const isValid = user.comparePassword(password);
   if (!isValid) {
     return false;
   }
@@ -46,6 +41,11 @@ export const validatePassword = async ({
   return omit(user.toJSON(), 'password');
 };
 
-export const findUserService = async (query: FilterQuery<IUserType>) => {
-  return UserModel.findOne(query).lean();
+export const getUserService = async (query: FilterQuery<IUserType>) => {
+  try {
+    const user = await UserModel.findOne(query).lean();
+    return user;
+  } catch (err: any) {
+    throw new Error(err);
+  }
 };

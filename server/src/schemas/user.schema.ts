@@ -1,24 +1,21 @@
 import { object, string, TypeOf } from 'zod';
 
-/**
- * @define the req.body = {name, email, password, passwordConfirmation} in zod type, and also match with validResources
- */
 export const createUserSchema = object({
   body: object({
     email: string({
       required_error: 'register email is required'
-    }).email('email is invalid'),
+    }).email('email format is invalid'),
     name: string({
       required_error: 'register name is required'
     }),
     password: string({
       required_error: 'register password is required'
-    }).min(6, 'at least 6 characters'),
+    }).min(6, 'password at least 6 characters'),
     passwordConfirmation: string({
-      required_error: 'register confirm password is required'
-    })
+      required_error: 'confirm password is required'
+    }).min(6, 'confirm password at least 6 characters')
   }).refine((data) => data.password === data.passwordConfirmation, {
-    message: 'confirm password not match',
+    message: 'password not match',
     path: ['passwordConfirmation']
   })
 });

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import useSWR from 'swr';
 import { fetcher } from '../utils/fetcher';
 import styles from '../styles/Home.module.css';
+import { getGoogleURL } from '../utils/getGoogleURL';
 
 type User = {
   _id: string;
@@ -19,7 +20,7 @@ type User = {
 
 const Home: NextPage<{ fallbackData: User }> = ({ fallbackData }) => {
   // get it through http://localhost:1336/api/me
-  const { data } = useSWR<User>(
+  const { data } = useSWR<User | null>(
     `
     http://localhost:1336/api/me
   `,
@@ -37,7 +38,10 @@ const Home: NextPage<{ fallbackData: User }> = ({ fallbackData }) => {
 
   return (
     <div className={styles.container}>
-      <main className={styles.main}></main>
+      <main className={styles.main}>
+        <a href={getGoogleURL()}>login with google</a>
+        <a href="/auth/login">login</a>
+      </main>
     </div>
   );
 };

@@ -1,36 +1,22 @@
-import { Express, Request, Response } from 'express';
-import {
-  createUserController,
-  getUserController
-} from './controllers/user.controller';
+import { Request, Response, Express } from 'express';
+import { createUserController } from './controllers/user.controller';
 import { validateResources } from './middlewares/validateResources';
-import { createUserService } from './services/user.service';
-import { createUserSchema } from './zod-schemas/user.schema';
+import { createUserSchema } from './schemas/user.schema';
+import { createSessionSchema } from './schemas/session.schema';
 import {
   createSessionController,
   deleteSessionController,
   getSessionController
 } from './controllers/session.controller';
-import { createSessionSchema } from './zod-schemas/session.schema';
-import { deserializeUser } from './middlewares/deserializeUser';
-import { requireUser } from './middlewares/requireUser';
-import {
-  createProductSchema,
-  deleteProductSchema,
-  getProductSchema,
-  updateProductSchema
-} from './zod-schemas/product.schema';
-import {
-  createProductController,
-  deleteProductController,
-  getProductController,
-  updateProductController
-} from './controllers/product.controller';
+import { requiredUser } from './middlewares/requiredUser';
 
+/**
+ * @define create the routes for the whole project
+ * @param app
+ */
 export const routes = (app: Express) => {
-  app.get('/routes-check', (req: Request, res: Response) => {
-    res.send(`this is route check`);
-    //   curl http://localhost:1336/routes-check
+  app.get('/api/test', (req: Request, res: Response) => {
+    res.sendStatus(200);
   });
 
   app.post(
@@ -39,39 +25,13 @@ export const routes = (app: Express) => {
     createUserController
   );
 
-  app.get('/api/me', requireUser, getUserController);
-
   app.post(
     '/api/sessions',
     validateResources(createSessionSchema),
     createSessionController
   );
 
-  app.get('/api/sessions', requireUser, getSessionController);
+  app.get('/api/sessions', requiredUser, getSessionController);
 
-  app.delete('/api/sessions', requireUser, deleteSessionController);
-
-  app.post(
-    '/api/products',
-    [requireUser, validateResources(createProductSchema)],
-    createProductController
-  );
-
-  app.put(
-    '/api/products/:productId',
-    [requireUser, validateResources(updateProductSchema)],
-    updateProductController
-  );
-
-  app.get(
-    '/api/products/:productId',
-    [requireUser, validateResources(getProductSchema)],
-    getProductController
-  );
-
-  app.delete(
-    '/api/products/:productId',
-    [requireUser, validateResources(deleteProductSchema)],
-    deleteProductController
-  );
+  app.delete('/api/sessions', requiredUser, deleteSessionController);
 };

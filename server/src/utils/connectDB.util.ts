@@ -1,27 +1,23 @@
 import mongoose from 'mongoose';
-import chalk from 'chalk';
 import config from 'config';
+import colors from 'colors';
 
+/**
+ * @define create the connection to mongoDB
+ */
 export const connectDBUtil = async () => {
-  const mongoDBUri = config.get<string>('mongoDBUri');
-
   try {
-    await mongoose.connect(mongoDBUri);
-    console.log(chalk.bgBlueBright.bold('connected to mongoDB already'));
-  } catch (err) {
-    console.error(chalk.bgRedBright('Not yet connect with mongoDB'));
-    process.exit(1);
+    await mongoose.connect(config.get<string>('mongoDBUri'));
+    console.log(
+      colors.bgCyan.underline.bold.yellow(
+        'This server is already connected with MongoDB'
+      )
+    );
+  } catch (err: any) {
+    console.error(
+      colors.bgRed.underline.bold.yellow(
+        'This server not yet connected with DB'
+      )
+    );
   }
-
-  /*
-  return mongoose
-    .connect(mongoDBUri)
-    .then(() => {
-      console.log('connected to mongoDB already');
-    })
-    .catch((err) => {
-      console.error('Not yet connect with mongoDB');
-      process.exit(1);
-    });
-  */
 };

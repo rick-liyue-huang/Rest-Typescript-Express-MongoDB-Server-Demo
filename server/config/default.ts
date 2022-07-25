@@ -26,7 +26,11 @@ FQwkssGY36iimZU/aBDwhBNqVYCxRb5Xw/me9qRE5Tjlf5q15YK97xQ+pQUx+VS2
 tpxRUzX+pNi09MhVBckCQBXE+obws7GPK/QmDe/ncVAPFiV4+fwikcdhNfuBk7nJ
 yKKKTz7PX3dXKJ6PH/A1mpDAzmoXeg/PPTCSxOzbsQ0=
 -----END RSA PRIVATE KEY-----`,
-  accessTokenTimeDuration: '20000s',
+  accessTokenTimeDuration: '3s',
   refreshTokenTimeDuration: '1y',
-  origin: 'http://localhost:3000'
+  origin: 'http://localhost:3000',
+  googleClientId:
+    '182562934899-kt16efh8e71acchgih6v488q395hk3jf.apps.googleusercontent.com',
+  googleClientSecret: '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',
+  googleOAuthRedirectURL: 'http://localhost:1336/api/sessions/oauth/google'
 };
