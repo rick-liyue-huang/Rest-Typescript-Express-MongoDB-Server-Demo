@@ -18,3 +18,7 @@ export const createUserController = async (
     return res.status(409).send(err.message); // conflict for duplicated user
   }
 };
+
+export const getCurrentUserController = async (req: Request, res: Response) => {
+  return res.send(res.locals.user);
+};

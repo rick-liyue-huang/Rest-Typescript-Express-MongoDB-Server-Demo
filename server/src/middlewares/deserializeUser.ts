@@ -18,15 +18,15 @@ export const deserializeUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const accessToken = get(req, 'headers.authorization', '').replace(
-    /^Bearer\s/,
-    ''
-  );
+  const accessToken =
+    get(req, 'cookies.accessToken') ||
+    get(req, 'headers.authorization', '').replace(/^Bearer\s/, '');
   if (!accessToken) {
     return next();
   }
 
-  const refreshToken = get(req, 'headers.x-refresh');
+  const refreshToken =
+    get(req, 'cookies.refreshToken') || get(req, 'headers.x-refresh');
 
   const { decoded, expired } = verifyJWT(accessToken);
 
@@ -45,6 +45,16 @@ export const deserializeUser = async (
 
     if (newAccessToken) {
       res.setHeader('x-access-token', newAccessToken);
+
+      // add access token and refresh token in cookie
+      res.cookie('accessToken', newAccessToken, {
+        maxAge: 600000,
+        httpOnly: true, // js cannot access it
+        domain: 'localhost',
+        path: '/',
+        sameSite: 'strict',
+        secure: false // in production process is true
+      });
     }
 
     const result = verifyJWT(newAccessToken as string);

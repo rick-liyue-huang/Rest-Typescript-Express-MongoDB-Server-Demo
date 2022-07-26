@@ -1,5 +1,8 @@
 import { Request, Response, Express } from 'express';
-import { createUserController } from './controllers/user.controller';
+import {
+  createUserController,
+  getCurrentUserController
+} from './controllers/user.controller';
 import { validateResources } from './middlewares/validateResources';
 import { createUserSchema } from './schemas/user.schema';
 import { createSessionSchema } from './schemas/session.schema';
@@ -46,6 +49,9 @@ export const routes = (app: Express) => {
   app.get('/api/sessions', requiredUser, getSessionController);
 
   app.delete('/api/sessions', requiredUser, deleteSessionController);
+
+  // after login
+  app.get('/api/me', requiredUser, getCurrentUserController);
 
   app.post(
     '/api/products',

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
-export const RegisterSchema = object({
+export const registerSchema = object({
   email: string()
     .nonempty({
       message: 'register email is required',
     })
-    .email('email is invalid'),
+    .email('email format is invalid'),
   name: string().nonempty({
     message: 'register name is required',
   }),
@@ -19,36 +19,40 @@ export const RegisterSchema = object({
     .nonempty({
       message: 'register password is required',
     })
-    .min(6, 'at least 6 characters'),
-  passwordConfirmation: string().nonempty({
-    message: 'register confirm password is required',
-  }),
+    .min(6, 'password at least 6 characters'),
+  passwordConfirmation: string()
+    .nonempty({
+      message: 'confirm password is required',
+    })
+    .min(6, 'confirm password at least 6 characters'),
 }).refine((data) => data.password === data.passwordConfirmation, {
-  message: 'confirm password not match',
+  message: 'password not match',
   path: ['passwordConfirmation'],
 });
 
-type RegisterSchemaType = TypeOf<typeof RegisterSchema>;
+type RegisterSchemaInput = TypeOf<typeof registerSchema>;
 
 const RegisterPage: NextPage = () => {
-  const [loginError, setLoginError] = useState(null);
+  const [registerError, setRegisterError] = useState(null);
   const router = useRouter();
+
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<RegisterSchemaType>({
-    resolver: zodResolver(RegisterSchema),
+  } = useForm<RegisterSchemaInput>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const submitHandler = async (values: RegisterSchemaType) => {
-    console.log({ values });
-
+  const registerHandler: SubmitHandler<RegisterSchemaInput> = async (
+    values
+  ) => {
+    // console.log({ values });
     try {
       await axios.post(`http://localhost:1336/api/users`, values);
-      router.push('/');
+      await router.push('/');
     } catch (err: any) {
-      setLoginError(err.message);
+      setRegisterError(err.message);
     }
   };
 
@@ -56,53 +60,52 @@ const RegisterPage: NextPage = () => {
 
   return (
     <>
-      <p>{loginError}</p>
-      <form onSubmit={handleSubmit(submitHandler)}>
+      <p>{registerError}</p>
+      <form onSubmit={handleSubmit(registerHandler)}>
         <div className={'form-element'}>
-          <label htmlFor="email">Email: </label>
+          <label htmlFor="email">Email:</label>
           <input
-            id={'email'}
-            type="text"
-            placeholder={'rick@example.com'}
+            type="email"
+            placeholder={'please input email'}
             {...register('email')}
           />
+          {/* @ts-ignore*/}
           <p>{errors.email?.message}</p>
         </div>
 
         <div className={'form-element'}>
-          <label htmlFor="name">Name: </label>
+          <label htmlFor="name">Name:</label>
           <input
-            id={'name'}
             type="text"
-            placeholder={'rick'}
+            placeholder={'please input name'}
             {...register('name')}
           />
+          {/* @ts-ignore*/}
           <p>{errors.name?.message}</p>
         </div>
 
         <div className={'form-element'}>
-          <label htmlFor="password">Password: </label>
+          <label htmlFor="password">Password:</label>
           <input
-            id={'password'}
             type="password"
-            placeholder={'123123'}
+            placeholder={'please input password'}
             {...register('password')}
           />
+          {/* @ts-ignore*/}
           <p>{errors.password?.message}</p>
         </div>
 
         <div className={'form-element'}>
-          <label htmlFor="passwordConfirmation">Confirm Password: </label>
+          <label htmlFor="passwordConfirmation">Confirm Password:</label>
           <input
-            id={'passwordConfirmation'}
             type="password"
-            placeholder={'123123'}
+            placeholder={'please confirm password'}
             {...register('passwordConfirmation')}
           />
+          {/* @ts-ignore*/}
           <p>{errors.passwordConfirmation?.message}</p>
         </div>
-
-        <button type={'submit'}>Submit</button>
+        <button type={'submit'}>Register</button>
       </form>
     </>
   );

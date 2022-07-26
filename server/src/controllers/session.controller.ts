@@ -44,6 +44,27 @@ export const createSessionController = async (
     ...user,
     session: session._id
   });
+
+  // add access token and refresh token in cookie
+  // thus, the front end can get from cookie
+  res.cookie('accessToken', accessToken, {
+    maxAge: 600000,
+    httpOnly: true, // js cannot access it
+    domain: 'localhost',
+    path: '/',
+    sameSite: 'strict',
+    secure: false // in production process is true
+  });
+
+  res.cookie('refreshToken', refreshToken, {
+    maxAge: 3.15e10,
+    httpOnly: true, // js cannot access it
+    domain: 'localhost',
+    path: '/',
+    sameSite: 'strict',
+    secure: false // in production process is true
+  });
+
   // 5. return tokens
   return res.status(200).send({ accessToken, refreshToken });
 };
