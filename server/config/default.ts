@@ -30,7 +30,7 @@ yKKKTz7PX3dXKJ6PH/A1mpDAzmoXeg/PPTCSxOzbsQ0=
   refreshTokenTimeDuration: '1y',
   origin: 'http://localhost:3000',
   googleClientId:
-    '182562934899-kt16efh8e71acchgih6v488q395hk3jf.apps.googleusercontent.com',
-  googleClientSecret: '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',
+    '23182419665-96oj7qbbg88u0rb0kd9rddtka0tai4o0.apps.googleusercontent.com',
+  googleClientSecret: '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',
   googleOAuthRedirectURL: 'http://localhost:1336/api/sessions/oauth/google'
 };

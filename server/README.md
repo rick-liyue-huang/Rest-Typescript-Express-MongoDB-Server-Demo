@@ -139,3 +139,29 @@ separate the app from app.ts to get the standalone app for testing
 `yarn ts-jest config:init`
 `yarn test --detectOpenHandles` to get the test results detail
 `yarn test --watchAll` get the test result live
+
+
+Google OAuth NodeJS process:
+1. user clicks login link;
+2. Consent screen (hosted by Google);
+3. Callback;
+4. Get id and access token with code;
+5. Get Google user with tokens;
+6. Upsert user;
+7. Create session and tokens;
+8. Set cookies;
+9. Redirect back to client.
+
+
+process detail:
+1. click 'Google API Console' in page of 'https://developers.google.com/identity/protocols/oauth2'.
+2. create the project
+3. click oauth consent screen, and click external
+4. fill in the fields
+5. in scopes, click the first two scopes and then click next
+6. for the test, fill in the email address for register and login
+7. in credentials, click 'create credentials', then click 'OAuth client ID'
+8. fill in the name and fill in 'Authorized redirect URIs' by 'http://localhost:1336/api/sessions/oauth/google'
+9. get client id and client secret
+10. paste them in config.default.ts
+
